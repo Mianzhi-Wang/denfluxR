@@ -137,7 +137,10 @@ process <- function(data,
 
   # 4. Pass ALL arguments cleanly to the Python backend
   tryCatch({
-    # import the Python core module to avoid lazy loading issues in PyPI distribution
+    # mute redundant warning
+    reticulate::py_run_string("import warnings; warnings.filterwarnings('ignore')")
+
+    # Explicitly import core modules
     py_core <- reticulate::import("denflux.core", delay_load = TRUE)
 
     # Call the Python process function using the imported module
@@ -171,8 +174,12 @@ process <- function(data,
       diagnostic_plots = as.logical(diagnostic_plots)
     )
 
+    # Restore Python's warning mechanism
+    reticulate::py_run_string("warnings.resetwarnings()")
+
     # 5. Convert results back to R format
-    result_r <- reticulate::py_to_r(result_py)
+    # Force cross-language data frame conversion using as.data.frame
+    result_r <- as.data.frame(result_py)
 
     # Reconstruct DateTime Index into a column if pandas returned it as an index
     if ("Time" %in% names(result_r) && inherits(result_r$Time, "character")) {
@@ -182,6 +189,8 @@ process <- function(data,
     return(result_r)
 
   }, error = function(e) {
+    # Ensure that warning settings can be restored when an error occurs.
+    reticulate::py_run_string("import warnings; warnings.resetwarnings()")
     stop(paste("An error occurred in the Python engine:\n", e$message))
   })
 }
