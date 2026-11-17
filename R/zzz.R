@@ -3,31 +3,54 @@ denflux <- NULL
 
 .onLoad <- function(libname, pkgname) {
   # Use delay_load = TRUE to defer Python initialization until the user actually calls a function.
-  # This significantly improves package loading stability and prevents immediate crashes if Python is not configured.
+  # This significantly improves package loading stability and prevents immediate crashes.
   denflux <<- reticulate::import("denflux", delay_load = TRUE)
 }
 
 #' Install the Python denflux package
 #'
 #' @description
-#' A helper function to automatically install the underlying Python package `denflux`
-#' via pip into the R-reticulate environment.
+#' A helper function to automatically install the underlying Python package denflux
+#' into a dedicated, isolated Python environment. It handles the environment setup
+#' silently, ensuring no conflicts with existing user installations.
 #'
-#' @param envname The name of the Python environment. Default is "r-reticulate".
-#' @param method Installation method. Default is "auto".
-#' @param ... Additional arguments passed to \code{reticulate::py_install}.
 #' @export
-install_denflux <- function(method = "auto", conda = "auto", pip_options = "") {
-  message("Attempting to install Python package 'denflux' from PyPI...")
+install_denflux <- function() {
+  envname <- "denflux-env"
 
-  reticulate::py_install(
-    packages = "denflux",
-    envname = "r-reticulate",
-    method = method,
-    conda = conda,
-    pip = TRUE,
-    pip_options = pip_options
-  )
-  message("Installation complete. Please restart your R session.")
+  if (!requireNamespace("reticulate", quietly = TRUE)) {
+    stop("Package 'reticulate' is required but not installed.")
+  }
+
+  message("Preparing Python environment...")
+
+  # Defense: If no Python is found on the system, gracefully install a minimal Miniconda.
+  # This prevents permission errors on Windows systems without a registered Python.
+  if (!reticulate::py_available(initialize = FALSE)) {
+    message("No suitable Python found. Installing a lightweight Miniconda distribution in the background...")
+    tryCatch({
+      reticulate::install_miniconda()
+    }, error = function(e) {
+      warning("Could not install Miniconda automatically. Please install Python manually from https://www.python.org/downloads/ and try again.")
+    })
+  }
+
+  # Configure the environment using reticulate's smart auto-method
+  message(sprintf("Configuring dedicated virtual environment '%s'...", envname))
+  tryCatch({
+    reticulate::py_install(
+      packages = "denflux",
+      envname = envname,
+      method = "auto"
+    )
+  }, error = function(e) {
+    stop("Failed to configure Python backend. Error: ", e$message)
+  })
+
+  # Force R to lock onto this newly configured environment
+  reticulate::use_virtualenv(envname, required = TRUE)
+
+  message("Successfully installed the DenFlux backend.")
+  message("You are ready to use process()!")
 }
 
