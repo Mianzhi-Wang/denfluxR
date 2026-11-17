@@ -7,7 +7,7 @@
 
 <!-- badges: end -->
 
-`denfluxR` is the official R interface for the [DenFlux Python
+`denfluxR` is the R interface for the [DenFlux Python
 engine](https://github.com/Mianzhi-Wang/DenFlux) (also available on
 [PyPI](https://pypi.org/project/denflux/)). It provides a process-based
 computational framework to dynamically reconstruct the corrected
