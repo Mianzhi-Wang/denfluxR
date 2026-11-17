@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 # denfluxR
 
 <!-- badges: start -->
+[![R Version](https://img.shields.io/badge/R-4.0+-blue.svg)](https://cran.r-project.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Powered by DenFlux](https://img.shields.io/badge/Powered%20by-DenFlux%20(PyPI)-orange.svg)](https://pypi.org/project/denflux/)
 <!-- badges: end -->
 
 `denfluxR` is the R interface for the [DenFlux Python engine](https://github.com/Mianzhi-Wang/DenFlux) (also available on [PyPI](https://pypi.org/project/denflux/)). It provides a process-based computational framework to dynamically reconstruct the corrected zero-flow baseline for Granier thermal dissipation probes using machine learning (Random Forest) and physiological constraints.
@@ -60,3 +63,18 @@ library(denfluxR)
 ```
 
 For more detailed information and visualization examples, please refer to the package vignette.
+
+## Citation
+
+If you use `denfluxR` or the underlying `DenFlux` engine in your research, please cite our manuscript. A permanent DOI will be updated upon publication.
+
+> **[Wang M], et al. (In Review).** *[Paper Title]*. Submitted to [Journal Name].
+
+```bibtex
+@article{denflux_under_review,
+  title={[Paper Title]},
+  author={[Author 1 and Author 2 and Author 3]},
+  journal={Submitted to [Journal Name]},
+  year={2026},
+  note={Under Review}
+}
