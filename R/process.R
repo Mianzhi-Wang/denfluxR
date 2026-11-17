@@ -137,7 +137,11 @@ process <- function(data,
 
   # 4. Pass ALL arguments cleanly to the Python backend
   tryCatch({
-    result_py <- denflux$core$process(
+    # 显式导入 Python 的核心模块
+    py_core <- reticulate::import("denflux.core", delay_load = TRUE)
+
+    # 使用导入的模块调用 process
+    result_py <- py_core$process(
       df = df_to_python,
       time_col = as.character(time_col),
       dayfirst = as.logical(dayfirst),
