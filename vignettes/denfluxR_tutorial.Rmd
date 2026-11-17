@@ -1,0 +1,59 @@
+---
+title: "Getting Started with denfluxR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with denfluxR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5
+)
+```
+
+## Introduction
+
+`denfluxR` is the R interface for the **DenFlux** engine, providing a process-based computational framework to dynamically reconstruct the corrected zero-flow baseline for Granier thermal dissipation probes.
+
+## Setup and Installation
+
+Since `denfluxR` relies on the `denflux` Python engine, ensure that your R environment is properly linked to Python. 
+
+```{r setup}
+library(denfluxR)
+```
+
+*(Note: If this is your first time using the package, you may need to run `denfluxR::install_denflux()` to configure the Python backend).*
+
+## Basic Usage
+
+Let's simulate a basic workflow. You will need a dataframe containing at least your timestamp, sap flow raw data (`dT`), dendrometer data(`den`), VPD, and solar radiation data.
+
+```{r process-data, eval=FALSE}
+# 1. Load your dataset (assuming 'my_sapflow_data' is a loaded data.frame)
+# head(my_sapflow_data)
+
+# 2. Run the DenFlux baseline correction engine
+result <- process(
+  data = my_sapflow_data,
+  time_col = "Time",
+  dayfirst=TRUE,           # Matches your dataframe
+  growstart=5,             # May
+  growend=9,               # September
+  Radiation = "PAR",       # Matches your dataframe
+  night_threshold=10,      # Radiation < 10 is considered night
+  time_interval = 5,       # 5 min
+  diagnostic_plots = FALSE # Set to TRUE to view ML performance plots in case something wrong
+)
+
+# The result dataframe now contains your corrected 'Baseline' and 'J' (Sap Flux Density)
+```
+
+## Conclusion
+
+This function runs the Python core engine from R and returns the processed dataframe with the corrected baseline and sap flux density values.
