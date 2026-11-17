@@ -11,8 +11,8 @@ denflux <- NULL
 #'
 #' @description
 #' A helper function to automatically install the underlying Python package denflux
-#' into a dedicated, isolated Python environment. It handles the environment setup
-#' silently, ensuring no conflicts with existing user installations.
+#' into a dedicated, isolated Python environment using standard virtualenv.
+#' It handles the environment setup silently, ensuring no conflicts with existing user installations.
 #'
 #' @export
 install_denflux <- function() {
@@ -24,24 +24,18 @@ install_denflux <- function() {
 
   message("Preparing Python environment...")
 
-  # Defense: If no Python is found on the system, gracefully install a minimal Miniconda.
-  # This prevents permission errors on Windows systems without a registered Python.
+  # Ensure Python is available on the system.
   if (!reticulate::py_available(initialize = FALSE)) {
-    message("No suitable Python found. Installing a lightweight Miniconda distribution in the background...")
-    tryCatch({
-      reticulate::install_miniconda()
-    }, error = function(e) {
-      warning("Could not install Miniconda automatically. Please install Python manually from https://www.python.org/downloads/ and try again.")
-    })
+    stop("No Python installation was found on your system.\nPlease install Python manually from https://www.python.org/downloads/ and try again.")
   }
 
-  # Configure the environment using reticulate's smart auto-method
+  # Configure the environment using the native virtualenv method to avoid Conda ToS issues
   message(sprintf("Configuring dedicated virtual environment '%s'...", envname))
   tryCatch({
     reticulate::py_install(
       packages = "denflux",
       envname = envname,
-      method = "auto"
+      method = "virtualenv"
     )
   }, error = function(e) {
     stop("Failed to configure Python backend. Error: ", e$message)
