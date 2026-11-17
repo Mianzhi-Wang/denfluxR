@@ -7,16 +7,17 @@
 
 <!-- badges: end -->
 
-`denfluxR` is the official R interface for the **DenFlux** Python
-engine. It provides a process-based computational framework to
-dynamically reconstruct the corrected zero-flow baseline for Granier
-thermal dissipation probes using machine learning (Random Forest) and
-physiological constraints.
+`denfluxR` is the official R interface for the [DenFlux Python
+engine](https://github.com/Mianzhi-Wang/DenFlux) (also available on
+[PyPI](https://pypi.org/project/denflux/)). It provides a process-based
+computational framework to dynamically reconstruct the corrected
+zero-flow baseline for Granier thermal dissipation probes using machine
+learning (Random Forest) and physiological constraints.
 
 ## Installation
 
 You can install the development version of `denfluxR` from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/Mianzhi-Wang/denfluxR) with:
 
 ``` r
 # install.packages("devtools")
