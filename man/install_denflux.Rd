@@ -4,16 +4,14 @@
 \alias{install_denflux}
 \title{Install the Python denflux package}
 \usage{
-install_denflux(method = "auto", conda = "auto", pip_options = "")
+install_denflux(python_path = NULL)
 }
 \arguments{
-\item{method}{Installation method. Default is "auto".}
-
-\item{envname}{The name of the Python environment. Default is "r-reticulate".}
-
-\item{...}{Additional arguments passed to \code{reticulate::py_install}.}
+\item{python_path}{Character. Optional. The explicit path to your Python executable
+(e.g., "C:/path/to/anaconda3/python.exe"). If NULL, reticulate will try to find one automatically.}
 }
 \description{
-A helper function to automatically install the underlying Python package \code{denflux}
-via pip into the R-reticulate environment.
+A helper function to automatically install the underlying Python package denflux.
+If your system Python is not found automatically (e.g., Anaconda not in PATH),
+you can explicitly provide the path to your Python executable.
 }
